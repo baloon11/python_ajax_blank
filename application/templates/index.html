@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <title>Тестовое задание</title>
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+    <script>
+    $(document).ready(function(){
+
+        $("#first_field").keyup(function(event) {
+          var pattern = /^[a-z]+$/i;
+          var first_field=$("#first_field").val()
+          if(first_field.charAt(first_field.length-1).search(pattern) == 0){
+            $("#submit").attr('disabled',true);
+            $("#submit").addClass('btn-danger');
+            $("#submit").html("Неправильный формат ввода");
+          }else{
+            $("#submit").attr('disabled',false);
+            $("#submit").removeClass('btn-danger');
+            $("#submit").html("Поехали!");
+          }
+        });
+
+        $("#submit").click(function(event){
+          event.preventDefault();
+          var send_data={
+            first_field:$("#first_field").val(),
+            csrfmiddlewaretoken: $("[type='hidden']").attr('value')
+          };
+          $.ajax({
+            type: 'POST',
+            url: "/function/",
+            data:send_data,
+            dataType: 'json',
+            success: function(response){
+              $('#result').html("<h1>"+response['result']+"</h1>");
+              }
+          });
+        });
+    });
+    </script>
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="#">Home</a></li>
+            <li role="presentation"><a href="#">About</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Тестовая форма</h3>
+      </div>
+
+      <div class="jumbotron">
+        <div align="center">
+          <form  action="" class="form-inline" method="post" enctype="multipart/form-data"> 
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" class="form-control" style="width:400px" id="first_field" placeholder="Введите число">
+                <br/><br/>
+                <button id="submit" class="btn btn-success">Поехали!</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div  align="center" id ="result"></div>
+
+    </div>
+  </body>
+</html>
