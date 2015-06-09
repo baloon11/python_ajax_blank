@@ -9,6 +9,10 @@ In this project uses bootstap 3 as css framework.
 
 Change function function_for_ajax in application/views.py to get the desired functionality.
 
+As an example, function calculates the square of the number  from input field.
+
+If you have entered is not a number, then sending to the server will be blocked.
+
 Requirements
 ------------
 
